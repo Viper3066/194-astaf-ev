@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить матч</title>
+</head>
+<body>
+    <h1>Добавить матч</h1>
+    <form method="POST">
+        <label for="Div">Код дивизиона:</label>
+        <input type="text" id="Div" name="Div" required><br><br>
+        <label for="Date">Дата (ГГГГ-ММ-ДД):</label>
+        <input type="text" id="Date" name="Date" required><br><br>
+        <label for="HomeTeam">Домашняя команда:</label>
+        <input type="text" id="HomeTeam" name="HomeTeam" required><br><br>
+        <label for="AwayTeam">Гостевая команда:</label>
+        <input type="text" id="AwayTeam" name="AwayTeam" required><br><br>
+        <label for="FTHG">Голы домашней команды:</label>
+        <input type="text" id="FTHG" name="FTHG" required><br><br>
+        <label for="FTAG">Голы гостевой команды:</label>
+        <input type="text" id="FTAG" name="FTAG" required><br><br>
+        <label for="FTR">Результат (H/D/A):</label>
+        <input type="text" id="FTR" name="FTR" required><br><br>
+        <label for="season">Сезон:</label>
+        <input type="text" id="season" name="season" required><br><br>
+        <button type="submit">Добавить</button>
+    </form>
+    <a href="{{ url_for('index') }}">На главную</a>
+</body>
+</html>

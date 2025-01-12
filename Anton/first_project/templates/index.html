@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление базой данных</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .search-results {
+            margin-top: 20px;
+        }
+        .flash-messages {
+            margin: 20px 0;
+        }
+        .flash-messages .flash {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .flash-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .form-section {
+            margin-bottom: 40px;
+        }
+        .form-section h2 {
+            margin-bottom: 10px;
+        }
+        .form-section form {
+            margin-bottom: 20px;
+        }
+        .form-section label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-section input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .form-section button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-section button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Управление базой данных</h1>
+
+    <!-- Flash-сообщения -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Форма поиска матчей по дате -->
+    <div class="form-section">
+        <h2>Поиск матчей по дате</h2>
+        <form method="POST">
+            <label for="search_date">Дата (ГГГГ-ММ-ДД):</label>
+            <input type="text" id="search_date" name="search_date" required>
+            <button type="submit" name="search_match_by_date">Искать</button>
+        </form>
+    </div>
+
+    <!-- Результаты поиска -->
+    {% if search_results %}
+    <div class="search-results">
+        <h3>Результаты поиска</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Дивизион</th>
+                    <th>Дата</th>
+                    <th>Домашняя команда</th>
+                    <th>Гостевая команда</th>
+                    <th>Голы (дома)</th>
+                    <th>Голы (гости)</th>
+                    <th>Результат</th>
+                    <th>Сезон</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in search_results %}
+                <tr>
+                    <td>{{ match.Div }}</td>
+                    <td>{{ match.Date }}</td>
+                    <td>{{ match.HomeTeam }}</td>
+                    <td>{{ match.AwayTeam }}</td>
+                    <td>{{ match.FTHG }}</td>
+                    <td>{{ match.FTAG }}</td>
+                    <td>{{ match.FTR }}</td>
+                    <td>{{ match.season }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Таблица дивизионов -->
+    <div class="form-section">
+        <h2>Дивизионы</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Код дивизиона</th>
+                    <th>Название</th>
+                    <th>Страна</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for division in divisions %}
+                <tr>
+                    <td>{{ division.division }}</td>
+                    <td>{{ division.name }}</td>
+                    <td>{{ division.country }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Форма добавления дивизиона -->
+        <h3>Добавить дивизион</h3>
+        <form method="POST">
+            <label for="division">Код дивизиона:</label>
+            <input type="text" id="division" name="division" required>
+            <label for="name">Название:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="country">Страна:</label>
+            <input type="text" id="country" name="country" required>
+            <button type="submit" name="add_division">Добавить</button>
+        </form>
+
+        <!-- Форма удаления дивизиона -->
+        <h3>Удалить дивизион</h3>
+        <form method="POST">
+            <label for="division">Код дивизиона:</label>
+            <input type="text" id="division" name="division" required>
+            <button type="submit" name="delete_division">Удалить</button>
+        </form>
+    </div>
+
+    <!-- Таблица матчей -->
+    <div class="form-section">
+        <h2>Матчи</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Дивизион</th>
+                    <th>Дата</th>
+                    <th>Домашняя команда</th>
+                    <th>Гостевая команда</th>
+                    <th>Голы (дома)</th>
+                    <th>Голы (гости)</th>
+                    <th>Результат</th>
+                    <th>Сезон</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matches %}
+                <tr>
+                    <td>{{ match.Div }}</td>
+                    <td>{{ match.Date }}</td>
+                    <td>{{ match.HomeTeam }}</td>
+                    <td>{{ match.AwayTeam }}</td>
+                    <td>{{ match.FTHG }}</td>
+                    <td>{{ match.FTAG }}</td>
+                    <td>{{ match.FTR }}</td>
+                    <td>{{ match.season }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Форма добавления матча -->
+        <h3>Добавить матч</h3>
+        <form method="POST">
+            <label for="Div">Код дивизиона:</label>
+            <input type="text" id="Div" name="Div" required>
+            <label for="Date">Дата (ГГГГ-ММ-ДД):</label>
+            <input type="text" id="Date" name="Date" required>
+            <label for="HomeTeam">Домашняя команда:</label>
+            <input type="text" id="HomeTeam" name="HomeTeam" required>
+            <label for="AwayTeam">Гостевая команда:</label>
+            <input type="text" id="AwayTeam" name="AwayTeam" required>
+            <label for="FTHG">Голы (дома):</label>
+            <input type="text" id="FTHG" name="FTHG" required>
+            <label for="FTAG">Голы (гости):</label>
+            <input type="text" id="FTAG" name="FTAG" required>
+            <label for="FTR">Результат (H/D/A):</label>
+            <input type="text" id="FTR" name="FTR" required>
+            <label for="season">Сезон:</label>
+            <input type="text" id="season" name="season" required>
+            <button type="submit" name="add_match">Добавить</button>
+        </form>
+
+        <!-- Форма удаления матча -->
+        <h3>Удалить матч</h3>
+        <form method="POST">
+            <label for="Div">Код дивизиона:</label>
+            <input type="text" id="Div" name="Div" required>
+            <label for="Date">Дата (ГГГГ-ММ-ДД):</label>
+            <input type="text" id="Date" name="Date" required>
+            <label for="HomeTeam">Домашняя команда:</label>
+            <input type="text" id="HomeTeam" name="HomeTeam" required>
+            <label for="AwayTeam">Гостевая команда:</label>
+            <input type="text" id="AwayTeam" name="AwayTeam" required>
+            <button type="submit" name="delete_match">Удалить</button>
+        </form>
+    </div>
+</body>
+</html>

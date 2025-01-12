@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить дивизион</title>
+</head>
+<body>
+    <h1>Добавить дивизион</h1>
+    <form method="POST">
+        <label for="division">Код дивизиона:</label>
+        <input type="text" id="division" name="division" required><br><br>
+        <label for="name">Название:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="country">Страна:</label>
+        <input type="text" id="country" name="country" required><br><br>
+        <button type="submit">Добавить</button>
+    </form>
+    <a href="{{ url_for('index') }}">На главную</a>
+</body>
+</html>
